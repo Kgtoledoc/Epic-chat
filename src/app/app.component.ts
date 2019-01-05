@@ -1,3 +1,4 @@
+import { MessageService } from '../app/message.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,32 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'epic-chat';
+  title = "Epic-chat";
+  message = '';
+  chats = [];
+  username;
+
+  constructor(private messageService: MessageService) {
+    this.messageService.getChats().subscribe((data) => {
+      this.chats = data;
+      window.setTimeout(() => {
+        const elem = document.getElementById('scrolldiv');
+        elem.scrollTop = elem.scrollHeight;
+      }, 500);
+    })
+  }
+
+  addChat() {
+    if (this.message.length === 0) {
+      return;
+    }
+    this.messageService.addChat(this.message);
+    this.message = '';
+  }
+
+  addUser(user) {
+    this.messageService.addUser(user);
+    this.username = user;
+  }
+
 }
